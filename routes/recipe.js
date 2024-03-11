@@ -8,7 +8,8 @@ const { v4: uuidv4 } = require('uuid');
 const Unit = require('../models/unit');
 
 
-router.get("/ingredient/:ingredient", async (req, res) => {
+router.get("/ingredients", async (req, res) => {
+    const ingredients = req.query.ingredients.split(","); 
     Recipe.findAll({
         include: [
             {
@@ -16,21 +17,21 @@ router.get("/ingredient/:ingredient", async (req, res) => {
                 include: [
                     {
                         model: Ingredient,
-                        where:{ingredient:req.params.ingredient},
-                        
+                        where: {
+                            ingredient: ingredients 
+                        },
                     },
                     {
                         model: Unit
                     }
                 ],
-                required:true
+                required: true
             }
         ]
     })
     .then(response => res.json(response))
     .catch(err => res.json(err));
 });
-
 
 router.post('/', async (req, res) => { 
     try {
