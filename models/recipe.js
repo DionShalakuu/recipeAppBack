@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require('../db/db');
+const db = require('../config/db');
 const { v4: uuidv4 } = require('uuid');
 
 const Recipe = db.define('recipe', {

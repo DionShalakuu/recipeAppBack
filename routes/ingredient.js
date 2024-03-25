@@ -1,57 +1,12 @@
 const express = require('express');
 const Ingredient = require('../models/ingredient');
 const router = express.Router();
+const ingredientController = require('../controllers/ingredientController')
 
-router.post("/",(req,res)=>{
-    Ingredient.create(req.body)
-        .then(response => res.json(response))
-        .catch(err => res.json(err))
-})
-
-router.get("/all",(req,res) =>{
-    Ingredient.findAll({
-        
-    })
-    .then(response => res.json(response))
-    .catch(err => res.json(err))
-})
-
-router.put('/',(req,res)=>{
-    Ingredient.findByPk(req.body.id)
-    .then(response => {
-        response.name = req.body.name !== "" ? req.body.name : null;
-        response.description = req.body.description !== "" ? req.body.description : null;
-        response.instructions = req.body.instructions !== "" ? req.body.instructions : null;
-        response.save()
-        .then(response => {
-            res.json({
-                data: response,
-                updated: true
-            });
-        })
-        .catch(err => res.json(err));
-    }).catch(err => err.json(res))
-})
-
-
-router.get("/:id",(req,res) =>{
-    Ingredient.findByPk(req.params.id)
-    .then(response => res.json(response))
-    .catch(err => res.json(err))
-})
-
-router.delete('/:id', (req, res) => {
-    Ingredient.findByPk(req.params.id)
-        .then(response => {
-            if (response == null) {
-                res.json({ error: "Type not found." });
-            } else {
-                response.destroy()
-                    .then(() => res.json({ data: response, isDeleted: true }))
-                    .catch(err => res.json({ error: err.message, isDeleted: false }));
-            }
-        })
-        .catch(err => res.json(err));
-});
+router.post("/",ingredientController.createNewIngredient)
+router.get("/all",ingredientController.getAllIngredients)
+router.put('/',ingredientController.editIngredient)
+router.get("/:id",ingredientController.getSingleIngredient)
+router.delete('/:id', ingredientController.deleteIngredient);
 
 module.exports = router;
